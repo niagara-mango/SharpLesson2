@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -167,8 +168,39 @@ namespace SharpLesson2
         {
             while (true)
             {
+                v.TaskText("Задание 3.", "Заполнить 2 матрицы размерности NxN случайными числами. Вывести на консоль. Сложить 2 матрицы. Вывести результат.");
                 try
                 {
+                    v.TaskExtraText("Введите число N: ");
+                    int n = GetIntNumberFromScreen();
+
+                    var rand = new Random();
+
+                    //матрица 1
+                    int[,] arr1 = new int[n, n];
+                    int[,] arr2 = new int[n, n];
+                    int[,] summ = new int[n, n];
+                    string res = "";
+                    for (int i = arr1.GetLowerBound(0); i <= arr1.GetUpperBound(0); i++)
+                    {
+                        string s1 = "", s2="";
+                        for (int j = arr1.GetLowerBound(1); j <= arr1.GetUpperBound(1); j++)
+                        {
+                            arr1[i, j] = rand.Next(0,9);
+                            arr2[i, j] = rand.Next(10,30);
+
+                            s1 += arr1[i, j].ToString() + " ";
+                            s2 += arr2[i, j].ToString() + " ";
+
+                            summ[i, j] = arr1[i, j] + arr2[i, j];
+
+                            res += summ[i, j].ToString() + " ";
+                        }
+                        Console.WriteLine(s1+"    "+s2);
+                        res += "\n";
+                    }
+
+                    v.TaskResult("\n"+res);
                     break;
                 }
                 catch (Exception e)
