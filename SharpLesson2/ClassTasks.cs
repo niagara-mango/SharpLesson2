@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -110,8 +110,35 @@ namespace SharpLesson2
         {
             while (true)
             {
+                v.TaskText("Задание 2.", "Заполнить с консоли массив из N элементов. \nОтсортировать. Вывести результат. N - задается с консоли");
+
                 try
                 {
+                    v.TaskExtraText("Введите число N: ");
+                    int n = GetIntNumberFromScreen();
+
+                    int[] array = new int[n];
+                    v.TaskExtraText("Заполняем массив: ");
+                    for (int i = 0; i < n; i++)
+                    {
+                        v.TaskExtraText("Введите число: ");
+                        array[i] = GetIntNumberFromScreen();
+                    }
+
+                    // Instantiate the reverse comparer.
+                    IComparer revComparer = new ReverseComparer();
+                    Array.Sort(array, revComparer);
+
+                    string res = "";
+                    for (int i = array.GetLowerBound(0); i <= array.GetUpperBound(0);  i++)
+                    {
+                        res += array[i]+", ";
+                    }
+
+                    res = res.Trim().Trim(',');
+
+                    v.TaskResult(res);
+
                     break;
                 }
                 catch (Exception e)
@@ -121,6 +148,16 @@ namespace SharpLesson2
                 }
             }
         }
+
+        public class ReverseComparer : IComparer
+        {
+            // Call CaseInsensitiveComparer.Compare with the parameters reversed.
+            public int Compare(Object x, Object y)
+            {
+                return (new CaseInsensitiveComparer()).Compare(y, x);
+            }
+        }
+
         /*
          * Задание 3 
          * Заполнить 2 матрицы размерности NxN случайными числами. Вывести на консоль. Сложить 2 матрицы. Вывести результат.

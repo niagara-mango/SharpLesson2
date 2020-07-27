@@ -14,7 +14,7 @@ namespace SharpLesson2
             bool loop = true;
             do
             {
-                Console.ForegroundColor = ConsoleColor.DarkGreen; // устанавливаем цвет
+                Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет
                 Console.Write("\nВведите номер задачи (с 1 по 6, 0 - все задачи, exit - для завершения) ");
                 Console.ResetColor();
                 string line = Console.ReadLine();
