@@ -3,7 +3,7 @@ using System.Collections;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace SharpLesson2
 {
@@ -55,23 +55,21 @@ namespace SharpLesson2
                     int sum = a + b + c + d + e;
 
                     //ищем маскимальное
-                    int max = 0;
-                    max = (max < a) ? a : max;
+                    int max = a;
                     max = (max < b) ? b : max;
                     max = (max < c) ? c : max;
                     max = (max < d) ? d : max;
                     max = (max < e) ? e : max;
 
                     //ищем мнимальное
-                    int min = 0;
-                    min = (min > a) ? a : min;
+                    int min = a;
                     min = (min > b) ? b : min;
                     min = (min > c) ? c : min;
                     min = (min > d) ? d : min;
                     min = (min > e) ? e : min;
 
                     //количество четных чисел
-                    int i = 0;
+                    int 
                     i = ((a % 2 == 0) ? 1 : 0) +
                         ((b % 2 == 0) ? 1 : 0) +
                         ((c % 2 == 0) ? 1 : 0) +
@@ -79,7 +77,7 @@ namespace SharpLesson2
                         ((e % 2 == 0) ? 1 : 0);
 
                     //произведение нечетных чисел
-                    int j = 1;
+                    int 
                     j = ((a % 2 == 0) ? 1 : a) *
                         ((b % 2 == 0) ? 1 : b) *
                         ((c % 2 == 0) ? 1 : c) *
@@ -176,7 +174,6 @@ namespace SharpLesson2
 
                     var rand = new Random();
 
-                    //матрица 1
                     int[,] arr1 = new int[n, n];
                     int[,] arr2 = new int[n, n];
                     int[,] summ = new int[n, n];
@@ -222,8 +219,28 @@ namespace SharpLesson2
         {
             while (true)
             {
+                v.TaskText("Задание 4.", "Заполнить массив длиной N случайными числами.\nВвести с консоли число A.\nВывести Yes, если число A есть в массиве, No - в противном случае.");
                 try
                 {
+                    v.TaskExtraText("Введите число N: ");
+                    int n = GetIntNumberFromScreen();
+
+                    // заполняем массив
+                    var rand = new Random();
+                    int[] arr = new int[n];
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        arr[i] = rand.Next(-10, 10);
+                        Console.Write(" {0}",arr[i].ToString());
+                    }
+                    
+                    v.TaskExtraText("\nВведите число A: ");
+                    int a = GetIntNumberFromScreen();
+
+                    //проверяем наличие А
+                    int k = Array.IndexOf(arr, a);
+                    v.TaskResult(k == -1 ? "No" : "Yes");
+
                     break;
                 }
                 catch (Exception e)
@@ -243,8 +260,42 @@ namespace SharpLesson2
         {
             while (true)
             {
+                v.TaskText("Задание 5.", "Заполнить матрицу NxM случайными числами.\nз каждой строки выбрать минимальный элемент, занести его в массив.\nОтсортировать полученный массив и вывести его значения в обратном порядке.");
                 try
                 {
+                    v.TaskExtraText("Введите число N: ");
+                    int n = GetIntNumberFromScreen();
+                    v.TaskExtraText("Введите число M: ");
+                    int m = GetIntNumberFromScreen();
+
+                    int[,] arr = new int[m,n];
+                    int[] mins = new int[m];
+                    var rand = new Random();
+                    string txt ="";
+                    for (int i = arr.GetLowerBound(0); i <= arr.GetUpperBound(0); i++)
+                    {
+                        txt = "";
+                        int min = 10;
+                        for (int j = arr.GetLowerBound(1); j <= arr.GetUpperBound(1); j++)
+                        {
+                            arr[i, j] = rand.Next(0, 9);
+                            txt += arr[i, j].ToString() + " ";
+                            min = (min > arr[i, j] ? arr[i, j] : min);
+                        }
+                        Console.WriteLine(txt);
+                        mins[i] = min;
+                    }
+
+                    //массив минимумов
+                    Array.Sort(mins);
+                    txt = "";
+                    for (int i = mins.Length-1; i >=0 ; i--)
+                    {
+                        txt += mins[i].ToString() + " ";
+                    }
+
+                    v.TaskResult(txt);
+
                     break;
                 }
                 catch (Exception e)
@@ -265,9 +316,46 @@ namespace SharpLesson2
         {
             while (true)
             {
+                v.TaskText("Задание 6.", "Калькулятор.\nС консоли вводится левый операнд, операция, правый операнд.\nВыводится результат операции над операндами.\nРеализовать как минимум 4 операции, обработку ошибок (деление на 0 и др)");
                 try
                 {
-                    break;
+                    v.TaskExtraText("Введите, используя + - / *. например 5 + (-7,8) :");
+                    string line = Console.ReadLine().Replace(".", ",");
+
+                    string patt = "([-]*\\d+,*\\d*)\\s*([+,\\*,/,-]*)\\s*[(]*([-]*\\d+,*\\d*)[)]*\\s*$";
+
+                    string aLine = Regex.Match(line, patt).Groups[1].Value;
+                    string operand = Regex.Match(line, patt).Groups[2].Value;
+                    string bLine = Regex.Match(line, patt).Groups[3].Value;
+
+
+                    float a = float.Parse(aLine);
+                    float b = float.Parse(bLine);
+
+                    string result = "";
+                    switch (operand)
+                    {
+                        case "+":
+                            result = (a + b).ToString();
+                            break;
+                        case "-":
+                            result = (a - b).ToString();
+                            break;
+                        case "*":
+                            result = (a * b).ToString();
+                            break;
+                        case "/":
+                            result = (a / b).ToString();
+                            break;
+                        default:
+                            v.TaskWarning("неизвестный операнд");
+                            break;
+                    }
+
+                    v.TaskResult(result);
+
+
+                   // break;
                 }
                 catch (Exception e)
                 {
